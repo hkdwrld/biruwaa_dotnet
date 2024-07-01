@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Biruwaa.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class CategoryController : Controller
     {
         private readonly ICategoryRepository _categoryRepository;
@@ -37,5 +37,18 @@ namespace Biruwaa.Controllers
             }
             return View(obj);
         }
+
+        public IActionResult Delete(int id)
+        {
+            var obj = _categoryRepository.GetFirstOrDefault(u => u.Id == id);
+            if (obj == null)
+            {
+                return NotFound();
+            }
+            _categoryRepository.Remove(obj);
+            _categoryRepository.Save();
+            return RedirectToAction("Index");
+        }
+
     }
 }

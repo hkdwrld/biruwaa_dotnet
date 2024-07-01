@@ -1,0 +1,126 @@
+﻿@model Biruwaa.Models.ViewModels.Products.ProductVM
+@{
+    ViewData["Title"] = @Model.Name;
+}
+
+<!-- Demo page craeted by https://github.com/petr-goca -->
+<section aria-label="Main content" role="main" class="product-detail">
+  <div itemscope itemtype="http://schema.org/Product">
+    <meta itemprop="url" content="http://html-koder-test.myshopify.com/products/tommy-hilfiger-t-shirt-new-york">
+    <meta itemprop="image" content="//cdn.shopify.com/s/files/1/1047/6452/products/product_grande.png?v=1446769025">
+    <div class="shadow">
+      <div class="_cont detail-top">
+        <div class="cols">
+          <div class="left-col">
+            <div class="thumbs">
+                <a class="thumb-image active" href="@Model.ImageUrl" data-index="0">
+                    <span><img src="@Model.ImageUrl" alt="@Model.Name"></span>
+                  </a>
+            </div>
+            <div class="big">
+              <span id="big-image" class="img" quickbeam="image" style="background-image: url('@Model.ImageUrl');background-size: contain;" data-src="//cdn.shopify.com/s/files/1/1047/6452/products/product_1024x1024.png?v=1446769025"></span>
+              <div id="banner-gallery" class="swipe">
+                <div class="swipe-wrap">
+                  <div style="background-image: url('@Model.ImageUrl')"></div>
+                </div>
+              </div>
+              <div class="detail-socials">
+                <div class="social-sharing" data-permalink="http://html-koder-test.myshopify.com/products/tommy-hilfiger-t-shirt-new-york">
+                  <a target="_blank"  class="share-facebook" title="Share"></a>
+                  <a target="_blank"  class="share-twitter" title="Tweet"></a>
+                  <a target="_blank"  class="share-pinterest" title="Pin it"></a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="right-col">
+            <h1 itemprop="name">@Model.Name</h1>
+            <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+              <meta itemprop="priceCurrency" content="USD">
+              <link itemprop="availability" href="http://schema.org/InStock">
+              <div class="price-shipping">
+                <div class="price" id="price-preview" quickbeam="price" quickbeam-price="800">
+                  @Model.Price
+                </div>
+                <a>Free shipping</a>
+              </div>
+              <div class="swatches">
+                <div class="swatch clearfix" data-option-index="0">
+                  <div class="header">Category</div>
+                  <div class="alert alert-success p-1" role="alert">
+                     @Model.Category
+                    </div>
+                </div>
+              </div>
+              <!-- <form method="post" enctype="multipart/form-data" id="AddToCartForm"> -->
+              <form id="AddToCartForm" >
+                <select name="id" id="productSelect" quickbeam="product" class="product-single__variants">
+                  <option  selected="selected"  data-sku="" value="7924994501">
+                    M / Blue - $800.00 USD
+                  </option>
+                  <option  data-sku="" value="7924995077">
+                    M / Red - $850.00 USD
+                  </option>
+                  <option  data-sku="" value="7924994437">
+                    L / Blue - $850.00 USD
+                  </option>
+                  <option  data-sku="" value="7924994693">
+                    L / Yellow - $850.00 USD
+                  </option>
+                  <option  data-sku="" value="7924995013">
+                    L / Red - $850.00 USD
+                  </option>
+                  <option  data-sku="" value="7924994373">
+                    XL / Blue - $900.00 USD
+                  </option>
+                  <option  data-sku="" value="7924994629">
+                    XL / Yellow - $850.00 USD
+                  </option>
+                  <option  data-sku="" value="7924830021">
+                    XXL / Blue - $950.00 USD
+                  </option>
+                  <option  data-sku="" value="7924994885">
+                    XXL / Red - $850.00 USD
+                  </option>
+                </select>
+                <div class="d-flex">
+                    <div>
+                     <button id="AddToCart" quickbeam="add-to-cart">
+                      <span id="AddToCartText">Add to Cart</span>
+                     </button>
+                    </div>
+                    <div class="spinner">
+                        <input type="number" id="Quantity" name="quantity" value="1" min="1" class="quantity-selector">
+                    </div>
+                    <div class="btn">
+                        Qty.
+                    </div>
+                </div>
+              </form>
+              <div class="tabs">
+                <div class="tab-labels">
+                  <span data-id="1" class="active">Info</span>
+                </div>
+                <div class="tab-slides">
+                  <div id="tab-slide-1" itemprop="description"  class="slide active">
+                    @Model.Description
+                  </div>
+                </div>
+              </div>
+              <div class="social-sharing-btn-wrapper">
+                <span id="social_sharing_btn">Share</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <aside class="related">
+      <div class="_cont">
+        <h2>You might also like</h2>
+      </div>
+    </aside>
+  </div>
+
+</section>

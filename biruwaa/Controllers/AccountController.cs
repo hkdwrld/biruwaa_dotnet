@@ -53,6 +53,8 @@ namespace Biruwaa.Controllers
                     Address = model.Address
                 };
                 var result = await _userManager.CreateAsync(user, model.Password);
+                var roleResult = await _userManager.AddToRoleAsync(user, "User");
+
                 if (result.Succeeded)
                 {
                     await _signInManager.SignInAsync(user, isPersistent: false);

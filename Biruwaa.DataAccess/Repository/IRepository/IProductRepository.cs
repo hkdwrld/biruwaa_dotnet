@@ -7,5 +7,7 @@ namespace Biruwaa.DataAccess.Repository.IRepository
         void Update(Product obj);
 
         void Save();
+
+        Task<IEnumerable<Product>> Got();
     }
 }

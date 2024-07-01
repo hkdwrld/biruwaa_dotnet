@@ -4,6 +4,9 @@ using Biruwaa.DataAccess.Repository.IRepository;
 using Biruwaa.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,9 +14,33 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 //add swaggger support
-builder.Services.AddSwaggerGen(c =>
+
+builder.Services.AddSwaggerGen(option =>
 {
-    c.SwaggerDoc("v1", new() { Title = "Biruwaa API", Version = "v1" });
+    option.SwaggerDoc("v1", new() { Title = "Biruwaa API", Version = "v1" });
+    option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Please enter a valid token",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "Bearer"
+    });
+    option.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type=ReferenceType.SecurityScheme,
+                    Id="Bearer"
+                }
+            },
+            new string[]{}
+        }
+    });
 });
 
 
@@ -39,8 +66,36 @@ builder.Services.AddIdentity<AuthUser, IdentityRole>(
     })
     .AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
 
+builder.Services.AddAuthentication()
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = false,
+        ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
+        ValidateAudience = false,
+        ValidAudience = builder.Configuration["JWT:ValidAudience"],
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"])),
+    };
+});
+//.AddCookie(IdentityConstants.ApplicationScheme, o =>
+//{
+//    o.LoginPath = new PathString("/Identity/Account/Login");
+//    o.LogoutPath = new PathString("/Identity/Account/Logout");
+//    o.AccessDeniedPath = new PathString("/Identity/Account/AccessDenied");
+//});
+
+builder.Services.AddAuthorization();
+
+
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<ICartRepository, CartRepository>();
+
+builder.Services.AddEndpointsApiExplorer();
 
 var app = builder.Build();
 
@@ -58,13 +113,20 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+};
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
+
+
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
